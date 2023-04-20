@@ -4,13 +4,13 @@ mp_drawing = mp.solutions.drawing_utils          # mediapipe 繪圖方法
 mp_drawing_styles = mp.solutions.drawing_styles  # mediapipe 繪圖樣式
 mp_pose = mp.solutions.pose                      # mediapipe 姿態偵測
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 # 啟用姿勢偵測
-with mp_pose.Pose(
-        min_detection_confidence=0.5,
-        min_tracking_confidence=0.5) as pose:
-
+with mp_pose.Pose(static_image_mode=False, 
+                      min_detection_confidence=0.5,
+                      min_tracking_confidence=0.5, 
+                      model_complexity=2)as pose:
     if not cap.isOpened():
         print("Cannot open camera")
         exit()
@@ -19,7 +19,7 @@ with mp_pose.Pose(
         if not ret:
             print("Cannot receive frame")
             break
-        img = cv2.resize(img, (520, 300))               # 縮小尺寸，加快演算速度
+        # img = cv2.resize(img, (520, 300))               # 縮小尺寸，加快演算速度
         img2 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)   # 將 BGR 轉換成 RGB
         results = pose.process(img2)                  # 取得姿勢偵測結果
         # 根據姿勢偵測結果，標記身體節點和骨架
