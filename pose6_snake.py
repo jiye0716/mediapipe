@@ -109,6 +109,8 @@ def mediapipe_detection(image, model):
 url = "http://192.168.0.224:80"
 lastTime1 = time()
 lastTime2 = time()
+lastTime3 = time()
+
 cap = cv2.VideoCapture("yoga-1.mp4")  # 開啟鏡頭
 with mp_pose.Pose(static_image_mode=False, 
                   min_detection_confidence=0.5,
@@ -120,37 +122,52 @@ with mp_pose.Pose(static_image_mode=False,
         ret, frame = cap.read()
         landmarks,output_image,l_elbow,r_elbow,l_shoulder,r_shoulder,l_hip,r_hip,l_knee,r_knee=mediapipe_detection(frame, pose)
 
-        condA = l_shoulder>100 or r_shoulder>100
-        condB = l_hip <150 or r_hip <150  
+        condA = l_knee<160 or r_knee<160
+        condB = l_hip >150 or r_hip >150
+        condC = l_shoulder>30 or r_shoulder>30
 
         if condA and (time()-lastTime1)<4:
-            text1= 'low-body on the floor'
+            text1= 'straight the legs'
             cv2.putText(output_image, text1, (30, 30),cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
         elif condA and (time()-lastTime1)>=4 :
-            text1= 'low-body on the floor'
+            text1= 'straight the legs'
             cv2.putText(output_image, text1, (30, 30),cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
-            speak("下半身貼好在地板",'zh-tw')
-            data = {'hip':'1','knee': '1'}
+            speak("雙腿伸直",'zh-tw')
+            data = {'hip':'1'}
             response = requests.post(url, data=data)
             print(response.text)
             lastTime1 = time()
-        else:    
+        else:
             text1= ' '
             cv2.putText(output_image, text1, (30, 30),cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
-            if condB and (time()-lastTime2)<5 :
-                text2= 'upper body improvement '
+            if condB and (time()-lastTime2)<4 :
+                text2= 'low-body on the floor'
                 cv2.putText(output_image, text2, (30, 60),cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
-            elif condB and (time()-lastTime2)>5 :
-                text2= 'upper body improvement '
+            elif condB and (time()-lastTime2)>=4 :
+                text2= 'low-body on the floor'
                 cv2.putText(output_image, text2, (30, 60),cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
-                speak("上半身提高",'zh-tw')
-                data = {'shoulder':'1'}
+                speak("下半身貼好在地板上",'zh-tw')
+                data = {'hip':'1'}
                 response = requests.post(url, data=data)
                 print(response.text)
-                lastTime2 = time() 
-            else:
-                text2= ' success '
-                cv2.putText(output_image, text2, (30, 60),cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
+                lastTime2= time() 
+            else:    
+                text2= ' '
+                cv2.putText(output_image, text2, (30, 30),cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
+                if condB and (time()-lastTime3)<5 :
+                    text3= 'upper body improvement '
+                    cv2.putText(output_image, text3, (30, 60),cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
+                elif condB and (time()-lastTime3)>5 :
+                    text3= 'upper body improvement '
+                    cv2.putText(output_image, text3, (30, 60),cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
+                    speak("上半身提高",'zh-tw')
+                    data = {'shoulder':'1'}
+                    response = requests.post(url, data=data)
+                    print(response.text)
+                    lastTime3 = time() 
+                else:
+                    text3= ' success '
+                    cv2.putText(output_image, text3, (30, 60),cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
         color=(0,0,255)
         # try:
         #     cv2.putText(
