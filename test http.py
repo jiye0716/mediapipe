@@ -1,6 +1,7 @@
 import requests
+url = "http://192.168.0.118:80"
 
-data = {'l_elbow': '0'}
+data = {'l_elbow': '1'}
 response = requests.post(url, data=data)
 print(response.text)
 
