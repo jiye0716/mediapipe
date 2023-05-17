@@ -3,7 +3,9 @@
 const char* ssid = "Jiye";
 const char* password = "123456987";
 WebServer server(80);
-
+void handleRootRequest(){
+    server.send(200, "text/plain", "200");
+}
 void handleRoot() {
   String l_elbow = server.arg("l_elbow");//2
   String r_elbow = server.arg("r_elbow");//4
@@ -96,6 +98,7 @@ while (WiFi.status() != WL_CONNECTED) {
 Serial.println("WiFi connected");
 Serial.println(WiFi.localIP());
 digitalWrite(13,HIGH);
+server.on("/", HTTP_GET, handleRootRequest);
 server.on("/",handleRoot);
 server.begin();             
 }
