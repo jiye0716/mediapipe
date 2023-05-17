@@ -1,12 +1,13 @@
 #include <WiFi.h>
 #include <WebServer.h>
-const char* ssid = "cilab";
-const char* password = "dogbrother";
+const char* ssid = "Jiye";
+const char* password = "123456987";
 WebServer server(80);
 
 void handleRoot() {
   String l_elbow = server.arg("l_elbow");//2
   String r_elbow = server.arg("r_elbow");//4
+  String elbows = server.arg("elbows");//4
   String shoulder = server.arg("shoulder");//15 16
   String hips = server.arg("hips");//22 23
   String l_knee = server.arg("l_knee");//17
@@ -25,6 +26,14 @@ void handleRoot() {
     digitalWrite(4,HIGH);
     delay(1000);
     digitalWrite(4,LOW);
+  }else if(elbows=="1"){
+    Serial.println("elbows="+elbows);
+    server.send(200, "text/plain", "elbows");
+    digitalWrite(4,HIGH);
+    digitalWrite(2,HIGH);
+    delay(1000);
+    digitalWrite(4,LOW);
+    digitalWrite(2,LOW);
   }else if(shoulder=="1"){
     Serial.println("shoulder="+shoulder);
     server.send(200, "text/plain", "shoulder");
